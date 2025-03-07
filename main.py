@@ -23,7 +23,7 @@ if SESSION_STRING:
     # Save session to a temporary file
     SESSION_FILE = "session-instagram"
     with open(SESSION_FILE, "wb") as f:
-        f.write(base64.b64decode(SESSION_STRING)
+        f.write(base64.b64decode(SESSION_STRING))
 
     # Load the session
     L.load_session_from_file(SESSION_FILE)
