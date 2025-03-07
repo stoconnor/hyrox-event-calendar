@@ -15,7 +15,7 @@ calendar_service = build("calendar", "v3", credentials=creds)
 
 # Instaloader Setup
 L = instaloader.Instaloader()
-PROFILE = "your_instagram_username"
+PROFILE = "hybridathleteevents.ie"
 
 # Login (Required for stories)
 L.load_session_from_file(PROFILE)  # Ensure you have a valid session
