@@ -20,20 +20,16 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
-      - name: Debug Secrets
-        run: echo "Checking if secret exists"; test -n "$CREDENTIALS_JSON" && echo "Secret is present" || echo "Secret is missing"
-        shell: bash
+      - name: Verify RapidAPI Key
+        run: |
+          if [ -z "$RAPIDAPI_KEY" ]; then
+            echo "❌ RAPIDAPI_KEY is missing! Set it in GitHub Secrets."
+            exit 1
+          else
+            echo "✅ RAPIDAPI_KEY found."
+          fi
         env:
-          CREDENTIALS_JSON: ${{ secrets.CREDENTIALS_JSON }}
-
-      - name: Create credentials.json
-        run: echo "$CREDENTIALS_JSON" > credentials.json
-        shell: bash
-        env:
-          CREDENTIALS_JSON: ${{ secrets.CREDENTIALS_JSON }}
-
-      - name: Verify credentials.json
-        run: cat credentials.json  # This prints part of the file for debugging (remove later)
+          RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
 
       - name: Run Python Script
         run: python main.py
