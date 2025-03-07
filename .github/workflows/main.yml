@@ -33,3 +33,5 @@ jobs:
 
       - name: Run Python Script
         run: python main.py
+        env:
+          RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
