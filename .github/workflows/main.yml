@@ -20,16 +20,15 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
+
       - name: Create credentials.json
-        run: |
-          echo "$CREDENTIALS_JSON" | base64 --decode > credentials.json
-          cat credentials.json  # Debugging: Show the file content
+        run: echo "$CREDENTIALS_JSON" > credentials.json
         shell: bash
         env:
           CREDENTIALS_JSON: ${{ secrets.CREDENTIALS_JSON }}
 
       - name: Verify credentials.json
-        run: cat credentials.json | jq '.'  # Validate JSON format
+        run: cat credentials.json | jq '.'  # Validate JSON structure
 
       - name: Verify RapidAPI Key
         run: |
