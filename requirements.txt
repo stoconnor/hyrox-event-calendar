@@ -1,7 +1,14 @@
-instaloader
-pytesseract
-Pillow
+# Google API dependencies
 google-auth
 google-auth-oauthlib
 google-auth-httplib2
 google-api-python-client
+
+# Requests library for API calls
+requests
+
+# JSON handling (included in Python, but sometimes required explicitly)
+simplejson
+
+# Date and time handling
+python-dateutil
