@@ -1,14 +1,20 @@
 import requests
 import os
 import re
+import time
+import random
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from datetime import datetime
 
 # 🔹 Load RapidAPI key from GitHub Secrets
 RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
-PROFILE = "hybridathleteevents.ie"  # Change to your actual Instagram username
-USER_ID = "263765230"  # Change this to the user ID if necessary
+PROFILE = "hybridathleteevents.ie"  # Change to the target Instagram username
+USER_ID = "263765230"  # Change this to the actual Instagram user ID
+
+if not RAPIDAPI_KEY:
+    print("❌ Missing RapidAPI Key. Make sure to set RAPIDAPI_KEY in GitHub Secrets.")
+    exit(1)
 
 # 🔹 Google Calendar Setup
 SERVICE_ACCOUNT_FILE = "credentials.json"
@@ -38,36 +44,48 @@ def add_event_to_calendar(event_name, event_date, event_location):
     except Exception as e:
         print(f"❌ Error adding event: {e}")
 
-# 🔹 Fetch Instagram Posts from RapidAPI
+# 🔹 Function to Fetch Instagram Posts with Rate Limit Handling
 def fetch_instagram_posts(profile):
-    url = f"https://instagram230.p.rapidapi.com/user/posts"
+    url = "https://instagram230.p.rapidapi.com/user/posts"
     params = {"username": profile}
     headers = {
         "X-RapidAPI-Key": RAPIDAPI_KEY,
         "X-RapidAPI-Host": "instagram230.p.rapidapi.com"
     }
 
+    print(f"📡 Fetching posts for {profile}...")
+    time.sleep(random.randint(5, 15))  # Random delay to avoid rate limits
     response = requests.get(url, headers=headers, params=params)
 
     if response.status_code == 200:
         return response.json()
+    elif response.status_code == 429:
+        print("⚠️ Rate limit hit (429). Waiting before retrying...")
+        time.sleep(60)  # Wait 60 seconds before retrying
+        return fetch_instagram_posts(profile)
     else:
         print(f"❌ Failed to fetch Instagram posts: {response.status_code} - {response.text}")
         return None
 
-# 🔹 Fetch Instagram Stories from RapidAPI
+# 🔹 Function to Fetch Instagram Stories with Rate Limit Handling
 def fetch_instagram_stories(user_id):
-    url = f"https://instagram230.p.rapidapi.com/user/stories"
+    url = "https://instagram230.p.rapidapi.com/user/stories"
     params = {"user_id": user_id}
     headers = {
         "X-RapidAPI-Key": RAPIDAPI_KEY,
         "X-RapidAPI-Host": "instagram230.p.rapidapi.com"
     }
 
+    print(f"📡 Fetching stories for user ID {user_id}...")
+    time.sleep(random.randint(5, 15))  # Random delay to avoid rate limits
     response = requests.get(url, headers=headers, params=params)
 
     if response.status_code == 200:
         return response.json()
+    elif response.status_code == 429:
+        print("⚠️ Rate limit hit (429). Waiting before retrying...")
+        time.sleep(60)  # Wait 60 seconds before retrying
+        return fetch_instagram_stories(user_id)
     else:
         print(f"❌ Failed to fetch Instagram stories: {response.status_code} - {response.text}")
         return None
