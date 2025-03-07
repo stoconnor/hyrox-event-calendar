@@ -16,9 +16,19 @@ calendar_service = build("calendar", "v3", credentials=creds)
 # Instaloader Setup
 L = instaloader.Instaloader()
 PROFILE = "hybridathleteevents.ie"
+SESSION_STRING = os.getenv("INSTALOADER_SESSION")
 
-# Login (Required for stories)
-L.load_session_from_file(PROFILE)  # Ensure you have a valid session
+if SESSION_STRING:
+    # Save session to a temporary file
+    SESSION_FILE = "session-instagram"
+    with open(SESSION_FILE, "w") as f:
+        f.write(SESSION_STRING)
+
+    # Load the session
+    L.load_session_from_file(SESSION_FILE)
+    print("✅ Loaded Instagram session successfully!")
+else:
+    print("❌ No Instaloader session found. Make sure to set INSTALOADER_SESSION as a GitHub secret.")
 
 # Function to extract event details (from caption or OCR text)
 def extract_event_details(text):
