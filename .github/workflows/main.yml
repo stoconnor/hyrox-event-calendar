@@ -20,6 +20,15 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
+      - name: Create credentials.json
+        run: echo "$SERVICE_ACCOUNT_FILE" > credentials.json
+        shell: bash
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.SERVICE_ACCOUNT_FILE }}
+
+      - name: Verify credentials.json
+        run: cat credentials.json | jq '.type'  # Debugging: Check if file is valid
+
       - name: Verify RapidAPI Key
         run: |
           if [ -z "$RAPIDAPI_KEY" ]; then
