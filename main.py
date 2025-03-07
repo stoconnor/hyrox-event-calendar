@@ -6,6 +6,7 @@ import re
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from datetime import datetime
+import base64
 
 # Google Calendar Setup
 SERVICE_ACCOUNT_FILE = "credentials.json"
@@ -21,8 +22,8 @@ SESSION_STRING = os.getenv("INSTALOADER_SESSION")
 if SESSION_STRING:
     # Save session to a temporary file
     SESSION_FILE = "session-instagram"
-    with open(SESSION_FILE, "w") as f:
-        f.write(SESSION_STRING)
+    with open(SESSION_FILE, "wb") as f:
+        f.write(base64.b64decode(SESSION_STRING)
 
     # Load the session
     L.load_session_from_file(SESSION_FILE)
