@@ -21,13 +21,15 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Create credentials.json
-        run: echo "$SERVICE_ACCOUNT_FILE" > credentials.json
+        run: |
+          echo "$CREDENTIALS_JSON" | base64 --decode > credentials.json
+          cat credentials.json  # Debugging: Show the file content
         shell: bash
         env:
-          GOOGLE_CREDENTIALS: ${{ secrets.SERVICE_ACCOUNT_FILE }}
+          CREDENTIALS_JSON: ${{ secrets.CREDENTIALS_JSON }}
 
       - name: Verify credentials.json
-        run: cat credentials.json | jq '.type'  # Debugging: Check if file is valid
+        run: cat credentials.json | jq '.'  # Validate JSON format
 
       - name: Verify RapidAPI Key
         run: |
